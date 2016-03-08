@@ -1,0 +1,17 @@
+Harmonogram projektu Java - Pacman
+
+
+1. Okienka: Swing, SWT lub OpenGL,
+a) zaimplementowanie pierwszego okna (bez przycisków)
+b) poprawa wizualnego wyswietlania okna( wysrodkowanie, zablokowanie obrysowywania przez funkcje "NullRepaintManager",
+ustawienie rozdzielczosci
+c) zaimplementowanie buforów (dla lepszej jakosci wyswietlania)
+
+2. Zapis i odczyt plików,
+3. Współbieżność: wątki, operacje atomowe, itp.
+4. Bazy danych: ORM (np. Hibernate) lub JDBC dla: MySQL, PostgreSQL lub SQLite,
+5. Komunikacja sieciowa: sockety lub RMI,
+6. Zaproponowane przez studenta (np. wzorce projektowe).
+a) stowrzenie srodowiska
+b) stworzenie drugiego watka dodanie funkcji "run"(dla przejrzystosci projektu)
+   stworzenie miejsc w drugim watku dla poszczegolnych czesci w przyszlosci rozwijanego kodu
