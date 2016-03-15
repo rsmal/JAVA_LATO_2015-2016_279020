@@ -2,7 +2,7 @@ Harmonogram projektu Java - Pacman
 
 
 1. Okienka: Swing, SWT lub OpenGL,
-ZAJECIA  NR 2.
+ZAJECIA  NR 2. [ uzyskane 2 pkt z dnia 08.03.2016 ]
 a) zaimplementowanie głównego okna
  - wyśrodkowanie okna z zablokowana zmiana rozdzielczości (ustawiona jest na sztywno w kodzie) bez panelu JFrame designer
 b) poprawa wyświetlania  oraz dodanie funkcji NoRepaintManager
