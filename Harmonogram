@@ -10,7 +10,7 @@ ZAJECIA NR 3.
 a)Zaimplementowanie przycisków,  ustawienie wielkości ,  poprawa wyświetlania( ustawienie focusa, przezroczystosci)
 -stworzenie przestrzeni dla dla przycisków,
 b)Dodanie grafik (które obecnie są w formie testu do końcowego efektu zostaną poprawione)
-- zaimplementowanie switchy (przy gotowych grafikach każde okno będzie miało swoja indywidualna grafike)
+- zaimplementowane switche (przy gotowych grafikach każde okno będzie miało swoja indywidualna grafike)
 -zaimplementowanie  clasy action w ,której będą wszystkie zaimplementowanie eventy po naciśnięciu przycisku,
 
 
