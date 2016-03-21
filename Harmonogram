@@ -6,7 +6,7 @@ ZAJECIA  NR 2. [ uzyskane 2 pkt z dnia 08.03.2016 ]
 a) zaimplementowanie głównego okna
  - wyśrodkowanie okna z zablokowana zmiana rozdzielczości (ustawiona jest na sztywno w kodzie) bez panelu JFrame designer
 b) poprawa wyświetlania  oraz dodanie funkcji NoRepaintManager
-ZAJECIA NR 3.
+ZAJECIA NR 3. [ uzyskane 2pkt z dnia 15.03.2016]
 a)Zaimplementowanie przycisków,  ustawienie wielkości ,  poprawa wyświetlania( ustawienie focusa, przezroczystosci)
 -stworzenie przestrzeni dla dla przycisków,
 b)Dodanie grafik (które obecnie są w formie testu do końcowego efektu zostaną poprawione)
