@@ -16,9 +16,8 @@ b)Dodanie grafik (które obecnie są w formie testu do końcowego efektu zostan�
 
 2. Zapis i odczyt plików,
 -konfiguracja serwera i klienta (informacje o adresie do bazy danych)
-//-zapisywanie mapy
--zapisywanie stanu gry (mapy)
--mechanizm za pomoca którego nastepuje automatyczny zapis po osiagnieciu pkt.
+-wczytywanie mapy
+
 3. Współbieżność: wątki, operacje atomowe, itp.
 -serwer 
 -watek który akceptuje, wysyla pracuje dla konkretnego użytkownika (stop serwer)
@@ -41,6 +40,8 @@ b)Dodanie grafik (które obecnie są w formie testu do końcowego efektu zostan�
 -logika zachowania się potworów,
 - kolizji (bitmapa biało- czarna  (białe chodzi , czarne nie)
 -logika naliczania punktacji
-
+-logika plynnie dzialajacego menu
+a)grafiki,
+b)przyciski
 
 
