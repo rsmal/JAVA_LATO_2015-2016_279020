@@ -11,6 +11,8 @@ import java.awt.Image;
 import java.awt.Transparency;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -21,11 +23,13 @@ import javax.swing.JComponent;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
-public class Gra2D extends Gra2DJadro implements ActionListener{
+public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
 
     public static void main(String[] args) {
         new Gra2D().run();
     }
+
+    
     
     enum stanyGry{
         GLOWNE, NOWAGRA, WCZYTAJ, STATYSTYKI, AUTORZY, WYJSCIE, NIEZNANY
@@ -63,6 +67,8 @@ public class Gra2D extends Gra2DJadro implements ActionListener{
     private JPanel zapis3Space;
     
     private stanyGry stan;
+    
+    private Mapa mapa;
     
     @Override
     public void inicjalizuj(){
@@ -193,11 +199,28 @@ public class Gra2D extends Gra2DJadro implements ActionListener{
         przyciskZapis3.setVisible(false);
         
         stan = stanyGry.GLOWNE;
+        
+        ramkaGlowna.addKeyListener(this);
     }
 
     @Override
     public void aktualizuj(long czas) {
-        
+        switch (stan) {
+            case GLOWNE:
+                break;
+            case NOWAGRA:
+                mapa.aktualizuj(czas);
+                break;
+            case WCZYTAJ:
+                break;
+            case AUTORZY:
+                break;
+            case STATYSTYKI:
+                break;
+            case WYJSCIE:
+            default:
+                break;
+        }
     }
 
     @Override
@@ -211,6 +234,7 @@ public class Gra2D extends Gra2DJadro implements ActionListener{
                 break;
             case NOWAGRA:
                 graphics.drawImage(nowaGra, -ramkaGlowna.getInsets().left, -ramkaGlowna.getInsets().top, null);
+                mapa.rysuj(graphics);
                 break;
             case WCZYTAJ:
                 graphics.drawImage(wczytaj, -ramkaGlowna.getInsets().left, -ramkaGlowna.getInsets().top, null);
@@ -304,9 +328,10 @@ public class Gra2D extends Gra2DJadro implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == przyciskNowaGra){
-            Mapa m = new Mapa("mapy/mapa_1.txt");
+            mapa = new Mapa("mapy/mapa1");
             pokazPrzyciskiMenu(false);
             stan = stanyGry.NOWAGRA;
+            przyciskWroc.setVisible(false);
         }else if(e.getSource() == przyciskWczytaj){
             pokazPrzyciskiMenu(false);
             stan = stanyGry.WCZYTAJ;
@@ -334,5 +359,19 @@ public class Gra2D extends Gra2DJadro implements ActionListener{
             przyciskZapis2.setVisible(false);
             przyciskZapis3.setVisible(false);
         }
+    }
+    
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        
     }
 }

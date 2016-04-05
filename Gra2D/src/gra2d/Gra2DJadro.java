@@ -11,7 +11,7 @@ import javax.swing.JFrame;
 
 
 public abstract class Gra2DJadro implements Runnable{
-    public static final int SZEROKOSC_GRY = 800;
+    public static final int SZEROKOSC_GRY = 797;
     public static final int WYSOKOSC_GRY = 600;
     private static final int BUFORY = 2;
     private boolean czyUruchomiony;
