@@ -1,4 +1,6 @@
 Harmonogram projektu Java - Pacman
+
+///// SKONCZONE ////
 1. Okienka: Swing, SWT lub OpenGL,
 ZAJECIA  NR 2. [ uzyskane 2 pkt z dnia 08.03.2016 ]
 a) zaimplementowanie głównego okna
@@ -16,6 +18,8 @@ b)Dodanie grafik (które obecnie są w formie testu do końcowego efektu zostan�
 
 2. Zapis i odczyt plików,
 -konfiguracja serwera i klienta (informacje o adresie do bazy danych)
+
+///// SKONCZONE ////
 ZAJECIA NR.4 [ uzyskany 1 pkt z  dnia 22.03.2016]
 -wczytywanie mapy z pliku  
 a)stworzenie map oraz ich grafik
@@ -47,11 +51,17 @@ b)stworzenie grafik dla poszczególnych elementów gry:
 
 
 6. Zaproponowane przez studenta (np. wzorce projektowe).
-ZAJECIA NR.5 [ uzyskane pkt z dnia 05.04.2016]
+
+///// SKONCZONE ////
+ZAJECIA NR.5 [ uzyskane 2 pkt z dnia 05.04.2016]
 -logika zachowania się potworów,
 -kolizji 
+
+
 -logika naliczania punktacji
 
+
+///// SKONCZONE ////
 ZAJECIA NR.4 [ uzyskany 1 pkt z  dnia 22.03.2016]
 -logika plynnie dzialajacego menu
 a)grafiki,
