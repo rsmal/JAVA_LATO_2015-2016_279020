@@ -218,6 +218,7 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
             case STATYSTYKI:
                 break;
             case WYJSCIE:
+                break;
             default:
                 break;
         }
@@ -332,6 +333,7 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
             pokazPrzyciskiMenu(false);
             stan = stanyGry.NOWAGRA;
             przyciskWroc.setVisible(false);
+            ramkaGlowna.requestFocus();
         }else if(e.getSource() == przyciskWczytaj){
             pokazPrzyciskiMenu(false);
             stan = stanyGry.WCZYTAJ;
@@ -339,18 +341,22 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
             przyciskZapis2.setVisible(true);
             przyciskZapis3.setVisible(true);
             przyciskWroc.setVisible(true);
+            ramkaGlowna.requestFocus();
         }else if(e.getSource() == przyciskStatystyki){
             pokazPrzyciskiMenu(false);
             stan = stanyGry.STATYSTYKI;
             przyciskWroc.setVisible(true);
+            ramkaGlowna.requestFocus();
         }else if(e.getSource() == przyciskAutorzy){
             pokazPrzyciskiMenu(false);
             stan = stanyGry.AUTORZY;
             przyciskWroc.setVisible(true);
+            ramkaGlowna.requestFocus();
         }else if(e.getSource() == przyciskWyjscie){
             pokazPrzyciskiMenu(false);
             stan = stanyGry.WYJSCIE;
             stop();
+            ramkaGlowna.requestFocus();
         }else if(e.getSource() == przyciskWroc){
             pokazPrzyciskiMenu(true);
             stan = stanyGry.GLOWNE;
@@ -358,16 +364,27 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
             przyciskZapis1.setVisible(false);
             przyciskZapis2.setVisible(false);
             przyciskZapis3.setVisible(false);
+            ramkaGlowna.requestFocus();
         }
     }
     
     @Override
     public void keyTyped(KeyEvent e) {
+        
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        
+        if(e.getKeyCode() == KeyEvent.VK_LEFT){
+            mapa.graczSetKierunek(kierunekPoruszania.LEWO);
+        }else if(e.getKeyCode() == KeyEvent.VK_RIGHT){
+            mapa.graczSetKierunek(kierunekPoruszania.PRAWO);
+        }else if(e.getKeyCode() == KeyEvent.VK_UP){
+            mapa.graczSetKierunek(kierunekPoruszania.GORA);
+        }else if(e.getKeyCode() == KeyEvent.VK_DOWN){
+            mapa.graczSetKierunek(kierunekPoruszania.DOL);
+        }
+        mapa.graczSetCzyMaChodzic(true);
     }
 
     @Override

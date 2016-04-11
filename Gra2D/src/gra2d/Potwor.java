@@ -1,5 +1,4 @@
 package gra2d;
-
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -12,7 +11,7 @@ enum kierunekPoruszania{
 }
 
 public class Potwor {
-    private static final double PREDKOSC = 0.70;
+    private static final double PREDKOSC = 0.40;
     private static BufferedImage obraz;
     private int x;
     private int y;

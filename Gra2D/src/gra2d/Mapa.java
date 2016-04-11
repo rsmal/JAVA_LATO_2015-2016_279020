@@ -10,8 +10,6 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
 
@@ -106,6 +104,14 @@ public class Mapa {
         for(Potwor p : potwory){
             p.aktualizuj(czas, mapa);
         }
-        gracz.aktualizuj(czas);
+        gracz.aktualizuj(czas, mapa);
+    }
+    
+    public void graczSetCzyMaChodzic(boolean b){
+        gracz.setCzyMaChodzic(b);
+    }
+    
+    public void graczSetKierunek(kierunekPoruszania kierunek){
+        gracz.setKierunek(kierunek);
     }
 }
