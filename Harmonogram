@@ -102,6 +102,7 @@ a)grafiki,
 
 b)przyciski
 
+<<<<<<< HEAD
 
 
 //// SKONCZONE // ZAJECIA NR.6 [ uzyskane pkt z dnia 12.04.2016]
@@ -115,4 +116,10 @@ b)przyciski
 
 -logika naliczania punktacji
 
+=======
+///// SKONCZONE ////
+ZAJECIA NR.6 [ uzyskane 2 pkt z dnia 12.04.2016]
+-logika poruszania sie pacmana
+-kolizje ze scianami
+>>>>>>> 154df0776dfcacb8bf744d3ebe71d47bb6f35ea7
 
