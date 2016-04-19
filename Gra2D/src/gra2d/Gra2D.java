@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Container;
 import java.awt.Cursor;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.Image;
@@ -17,11 +18,13 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
 
@@ -32,7 +35,7 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
     
     
     enum stanyGry{
-        GLOWNE, NOWAGRA, WCZYTAJ, STATYSTYKI, AUTORZY, WYJSCIE, NIEZNANY
+        GLOWNE, NOWAGRA, WCZYTAJ, STATYSTYKI, AUTORZY, WYJSCIE, NIEZNANY,KONIEC_GRY
     }
     
     private BufferedImage glowna;
@@ -66,6 +69,11 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
     private JButton przyciskZapis3;
     private JPanel zapis3Space;
     
+    private JButton przyciskWyslijNaSerwer;
+    private JPanel wyslijNaSerwerspace;
+    private JTextField nazwaGracza;
+    private JTextField liczbaPunktow;
+    
     private stanyGry stan;
     
     private Mapa mapa;
@@ -81,6 +89,7 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
         statystyki = zaladujObraz("obrazy/tlo2.png");
         autorzy = zaladujObraz("obrazy/autor.png");
         wyjscie = zaladujObraz("obrazy/gra_wyjscie.png");
+       
         
         
         przyciskNowaGra = stworzPrzycisk("obrazy/nowa.png", "Nowa gra", 0.9f);
@@ -105,6 +114,8 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
         przyciskZapis3 = stworzPrzycisk("obrazy/zapis3.png", "Wyjscie", 0.9f);
         przyciskZapis3.setFocusable(true);
         
+        przyciskWyslijNaSerwer = stworzPrzycisk("obrazy/autorzy.png","Wyslij  na  serwer" , 0.9f);
+        przyciskWyslijNaSerwer.setFocusable(true);
         
         nowaGraSpace = new JPanel();
         nowaGraSpace.setOpaque(false);
@@ -136,6 +147,11 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
         zapis3Space = new JPanel();
         zapis3Space.setOpaque(false);
         zapis3Space.add(przyciskZapis3);
+        
+        
+        wyslijNaSerwerspace = new JPanel ();
+        wyslijNaSerwerspace.setOpaque(false);
+        wyslijNaSerwerspace.add(przyciskWyslijNaSerwer);
      
         Container contentPane = ramkaGlowna.getContentPane();
 
@@ -174,8 +190,25 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
         zapis3Space.setSize(przyciskZapis3.getPreferredSize());
         zapis3Space.setLocation(310, 25+75+20+75+20+75);
         
+        wyslijNaSerwerspace.setVisible(true);
+        wyslijNaSerwerspace.setSize(przyciskWyslijNaSerwer.getPreferredSize());
+        wyslijNaSerwerspace.setLocation(320, 50+65+50+30+50+30+50+30);
         
         
+        nazwaGracza = new JTextField();
+        nazwaGracza.setBounds(310, 250, 200, 70);
+        nazwaGracza.setFont(new Font("Serif",Font.PLAIN,28));
+        nazwaGracza.setHorizontalAlignment(JTextField.CENTER);
+        //nazwaGracza.setEditable(false);
+        nazwaGracza.setVisible(false);
+        
+        liczbaPunktow = new JTextField();
+        liczbaPunktow.setBounds(310, 100, 200, 70);
+        liczbaPunktow.setFont(new Font("Serif",Font.PLAIN,28));
+        liczbaPunktow.setHorizontalAlignment(JTextField.CENTER);
+        liczbaPunktow.setEditable(false);
+        liczbaPunktow.setVisible(false);
+
         
         
         ramkaGlowna.getLayeredPane().add(nowaGraSpace,JLayeredPane.MODAL_LAYER);
@@ -187,6 +220,9 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
         ramkaGlowna.getLayeredPane().add(zapis1Space,JLayeredPane.MODAL_LAYER);
         ramkaGlowna.getLayeredPane().add(zapis2Space,JLayeredPane.MODAL_LAYER);
         ramkaGlowna.getLayeredPane().add(zapis3Space,JLayeredPane.MODAL_LAYER);
+        ramkaGlowna.getLayeredPane().add(wyslijNaSerwerspace,JLayeredPane.MODAL_LAYER);
+        ramkaGlowna.getLayeredPane().add(nazwaGracza,JLayeredPane.MODAL_LAYER);
+        ramkaGlowna.getLayeredPane().add(liczbaPunktow,JLayeredPane.MODAL_LAYER);
         
         przyciskNowaGra.setVisible(true);
         przyciskWczytaj.setVisible(true);
@@ -197,6 +233,7 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
         przyciskZapis1.setVisible(false);
         przyciskZapis2.setVisible(false);
         przyciskZapis3.setVisible(false);
+        przyciskWyslijNaSerwer.setVisible(false);
         
         stan = stanyGry.GLOWNE;
         
@@ -209,7 +246,13 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
             case GLOWNE:
                 break;
             case NOWAGRA:
-                mapa.aktualizuj(czas);
+                if(mapa.aktualizuj(czas) == false){
+                    stan = stanyGry.KONIEC_GRY;
+                    liczbaPunktow.setVisible(true);
+                    liczbaPunktow.setText(String.valueOf(mapa.getPunkty()));
+                    nazwaGracza.setVisible(true);
+                    przyciskWyslijNaSerwer.setVisible(true);
+                }
                 break;
             case WCZYTAJ:
                 break;
@@ -218,6 +261,8 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
             case STATYSTYKI:
                 break;
             case WYJSCIE:
+                break;
+            case KONIEC_GRY:
                 break;
             default:
                 break;
@@ -248,6 +293,10 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
                 break;
             case WYJSCIE:
                 graphics.drawImage(wyjscie, -ramkaGlowna.getInsets().left, -ramkaGlowna.getInsets().top, null);
+                break;
+            case KONIEC_GRY:
+                graphics.drawImage(statystyki, -ramkaGlowna.getInsets().left, -ramkaGlowna.getInsets().top, null);
+                break;
             default:
                 break;
         }
@@ -329,7 +378,7 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == przyciskNowaGra){
-            mapa = new Mapa("mapy/mapa1");
+            mapa = new Mapa(3);
             pokazPrzyciskiMenu(false);
             stan = stanyGry.NOWAGRA;
             przyciskWroc.setVisible(false);

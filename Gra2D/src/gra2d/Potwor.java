@@ -278,4 +278,11 @@ public class Potwor {
             }
         }
     }
+    public int getWspolrzednaX(){
+        return (int) (x * Mapa.KAFELKA_WYSOKOSC + xRuch);
+    }
+    
+    public int getWspolrzednaY(){
+        return (int) (y * Mapa.KAFELKA_SZEROKOSC + yRuch);
+    }
 }

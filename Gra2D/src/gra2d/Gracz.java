@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gra2d;
 
 import java.awt.Graphics2D;
@@ -11,10 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-/**
- *
- * @author Robo
- */
+
 public class Gracz {
     private static final double PREDKOSC = 0.70;
     private int x;
@@ -27,6 +19,9 @@ public class Gracz {
     private kierunekPoruszania kierunekZamawiany;
     private boolean czyMaChodzic;
     
+    private int punkty;
+    private int zycia;
+    
     public Gracz(int x, int y) {
         this.x = x;
         this.y = y;
@@ -36,6 +31,8 @@ public class Gracz {
         kierunek = kierunekPoruszania.LEWO;
         kierunekZamawiany = kierunekZamawiany;
         czyMaChodzic = false;
+        punkty = 0;
+        zycia = 3;
     }
     
     public static void wczytajObraz(){
@@ -50,7 +47,7 @@ public class Gracz {
         graphics.drawImage(obraz, (int) (y * Mapa.KAFELKA_SZEROKOSC + yRuch), (int) (x * Mapa.KAFELKA_WYSOKOSC + xRuch), null);
     }
     
-    public void aktualizuj(long czas,ElementMapy[][] mapa){
+    public void aktualizuj(long czas,ElementMapy[][] mapa,boolean gwiazdki[][],Mapa glownaMapa){
         this.czas += czas;
         if (this.czas >= 10) {
             this.czas = this.czas - 10;
@@ -81,18 +78,27 @@ public class Gracz {
                 
                 if(kierunek == kierunekPoruszania.LEWO){
                     if(mapa[x][y-1].getElement() == ElementMapy.elementy.SCIANA){
+                        xRuch = 0;
+                        yRuch = 0;
                         return;
                     }
                 }else if(kierunek == kierunekPoruszania.PRAWO){
                     if(mapa[x][y+1].getElement() == ElementMapy.elementy.SCIANA){
+                        xRuch = 0 ;
+                        yRuch = 0;
+                        
                         return;
                     }
                 }else if(kierunek == kierunekPoruszania.GORA){
                     if(mapa[x-1][y].getElement() == ElementMapy.elementy.SCIANA){
+                        xRuch = 0;
+                        yRuch = 0;
                         return;
                     }
                 }else if(kierunek == kierunekPoruszania.DOL){
                     if(mapa[x+1][y].getElement() == ElementMapy.elementy.SCIANA){
+                        xRuch = 0;
+                        yRuch = 0;
                         return;
                     }
                 }
@@ -119,18 +125,38 @@ public class Gracz {
                     if (yRuch >= 24) {
                         y++;
                         yRuch = 0;
+                        if(gwiazdki[x][y] == true){
+                            gwiazdki[x][y] = false;
+                            punkty++;
+                            glownaMapa.zmniejszGwiazdki();
+                        }
                        // czyMaChodzic = false;
                     } else if (yRuch <= -24) {
                         y--;
                         yRuch = 0;
+                        if(gwiazdki[x][y] == true){
+                            gwiazdki[x][y] = false;
+                            punkty++;
+                            glownaMapa.zmniejszGwiazdki();
+                        }
                         //czyMaChodzic = false;
                     } else if (xRuch >= 24) {
                         x++;
                         xRuch = 0;
-                       // czyMaChodzic = false;
+                        if(gwiazdki[x][y] == true){
+                            gwiazdki[x][y] = false;
+                            punkty++;
+                            glownaMapa.zmniejszGwiazdki();
+                        }
+                        //czyMaChodzic = false;
                     } else if (xRuch <= -24) {
                         x--;
                         xRuch = 0;
+                        if(gwiazdki[x][y] == true){
+                            gwiazdki[x][y] = false;
+                            punkty++;
+                            glownaMapa.zmniejszGwiazdki();
+                        }
                        // czyMaChodzic = false;
                     }
                 }
@@ -178,4 +204,36 @@ public class Gracz {
         
         //this.kierunek = kierunek;
     }
+    public int getWspolrzednaX(){
+        return (int) (x * Mapa.KAFELKA_WYSOKOSC + xRuch);
+    }
+    
+    public int getWspolrzednaY(){
+        return (int) (y * Mapa.KAFELKA_SZEROKOSC + yRuch);
+    }
+    
+    public int getZycia(){
+        return zycia;
+    }
+    
+    public void ustawZycia(int zycia){
+        this.zycia = zycia;
+    }
+
+    public int getPunkty() {
+        return punkty;
+    }
+
+    public void setPunkty(int punkty) {
+        this.punkty = punkty;
+    }
+    
+    public void setPozycja(int x,int y){
+        this.x = x;
+        this.y = y;
+        
+        xRuch = 0;
+        yRuch = 0;
+    }
+    
 }

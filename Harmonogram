@@ -1,14 +1,21 @@
-Harmonogram projektu Java - Pacman
+﻿Harmonogram projektu Java - Pacman
+
 
 ///// SKONCZONE ////
+
 1. Okienka: Swing, SWT lub OpenGL,
+
 ZAJECIA  NR 2. [ uzyskane 2 pkt z dnia 08.03.2016 ]
+
 a) zaimplementowanie głównego okna
  - wyśrodkowanie okna z zablokowana zmiana rozdzielczości (ustawiona jest na sztywno w kodzie) bez panelu JFrame designer
 b) poprawa wyświetlania  oraz dodanie funkcji NoRepaintManager
+
 ZAJECIA NR 3. [ uzyskane 2pkt z dnia 15.03.2016]
+
 a)Zaimplementowanie przycisków,  ustawienie wielkości ,  poprawa wyświetlania( ustawienie focusa, przezroczystosci)
 -stworzenie przestrzeni dla dla przycisków,
+
 b)Dodanie grafik (które obecnie są w formie testu do końcowego efektu zostaną poprawione)
 - zaimplementowane switche (przy gotowych grafikach każde okno będzie miało swoja indywidualna grafike)
 -zaimplementowanie  clasy action w ,której będą wszystkie zaimplementowanie eventy po naciśnięciu przycisku,
@@ -16,54 +23,96 @@ b)Dodanie grafik (które obecnie są w formie testu do końcowego efektu zostan�
 
 
 
+
+
+
 2. Zapis i odczyt plików,
 -konfiguracja serwera i klienta (informacje o adresie do bazy danych)
 
+
 ///// SKONCZONE ////
 ZAJECIA NR.4 [ uzyskany 1 pkt z  dnia 22.03.2016]
+
 -wczytywanie mapy z pliku  
+
 a)stworzenie map oraz ich grafik
+
 b)stworzenie grafik dla poszczególnych elementów gry:
 -pacman
 -potwory
 -punkty
 
 
+
+
 3. Współbieżność: wątki, operacje atomowe, itp.
 -serwer 
+
 -watek który akceptuje, wysyla pracuje dla konkretnego użytkownika (stop serwer)
+
 -watek klienta (kontroluje odbierane dane,może zostac przerwany w bezpieczny sposób)
+
 -klasa do komunikatow dla klienta.
 
 
 
+
+
 4. Bazy danych: ORM (np. Hibernate) lub JDBC dla: MySQL, PostgreSQL lub SQLite,
+
 -baza danych 4 tabele, JDBC, CDRUD
+
 -logike przechywania najlepszych wynikow
+
 -logika autoryzacji
+
 -logika walidacji (opcjonalnie)
 
 
+
+
 5. Komunikacja sieciowa: sockety lub RMI,
+
 - socket-serwer (wysyłanie - zadanie)
+
 -logika klienta (taki sam interfejs jak klient)
+
 -protokół komunikacji
+
+
 
 
 6. Zaproponowane przez studenta (np. wzorce projektowe).
 
+
 ///// SKONCZONE ////
 ZAJECIA NR.5 [ uzyskane 2 pkt z dnia 05.04.2016]
+
 -logika zachowania się potworów,
+
 -kolizji 
-
-
--logika naliczania punktacji
 
 
 ///// SKONCZONE ////
 ZAJECIA NR.4 [ uzyskany 1 pkt z  dnia 22.03.2016]
+
 -logika plynnie dzialajacego menu
+
 a)grafiki,
+
 b)przyciski
+
+
+
+//// SKONCZONE // ZAJECIA NR.6 [ uzyskane pkt z dnia 12.04.2016]
+-logika poruszania sie pacmana
+-kolizji
+
+
+
+
+
+
+-logika naliczania punktacji
+
 
