@@ -11,7 +11,7 @@ enum kierunekPoruszania{
 }
 
 public class Potwor {
-    private static final double PREDKOSC = 0.40;
+    private static final double PREDKOSC = 0.70;
     private static BufferedImage obraz;
     private int x;
     private int y;

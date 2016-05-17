@@ -2,6 +2,7 @@
 package gra2d;
 
 
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -18,6 +19,7 @@ public class Mapa {
     public static final int KAFELKA_WYSOKOSC = 24;
     public static final int KAFELKA_SZEROKOSC = 24;
     public static BufferedImage gwiazdka;
+    public static BufferedImage serce;
     
     private ElementMapy[][] mapa;
     private Gracz gracz;
@@ -30,6 +32,7 @@ public class Mapa {
     public Mapa(int aktualnaMapa){
         try {
             gwiazdka = ImageIO.read(new File("obrazy/grafiki/gwiazdka.png"));
+            serce = ImageIO.read(new File("obrazy/grafiki/serce.png"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -48,15 +51,19 @@ public class Mapa {
         ElementMapy.wczytajObrazy("mapy/mapa"+this.aktualnaMapa);
         Potwor.wczytajObraz();
         Gracz.wczytajObraz();
-        wczytajZPliku("mapy/mapa"+this.aktualnaMapa);
+        if(aktualnaMapa == 1){
+            wczytajZPliku("mapy/mapa"+this.aktualnaMapa,true);
+        }else{
+            wczytajZPliku("mapy/mapa"+this.aktualnaMapa,false);
+        }
     }
     
-    private boolean wczytajNastepnaMape(){
+    private boolean wczytajNastepnaMape(boolean czyStart){
         this.aktualnaMapa = this.aktualnaMapa + 1;
-        return wczytajZPliku("mapy/mapa"+(aktualnaMapa));
+        return wczytajZPliku("mapy/mapa"+(aktualnaMapa),czyStart);
     }
     
-    private boolean wczytajZPliku(String sciezka){
+    private boolean wczytajZPliku(String sciezka,boolean czyStart){
         try {
             //aktualnaMapa = sciezka;
             Scanner scan = new Scanner(new File(sciezka+"/mapa.txt"));
@@ -83,7 +90,11 @@ public class Mapa {
                             break;
                         case 'X':
                             mapa[i][j] = new ElementMapy(ElementMapy.elementy.PUSTE);
-                            gracz = new Gracz(i,j);
+                            if(czyStart){
+                                gracz = new Gracz(i,j);
+                            }else{
+                                gracz.setPozycja(i, j);
+                            }
                             break;
                         case '@':
                             mapa[i][j] = new ElementMapy(ElementMapy.elementy.PUSTE);
@@ -97,6 +108,7 @@ public class Mapa {
                     }
                 }
             }
+            
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
             return false;
@@ -104,17 +116,10 @@ public class Mapa {
         return true;
     }
     
+    // pozycja startowa //
     private void wczytajZPlikuPozycjeStartowe(String sciezka){
         try {
-            //aktualnaMapa = sciezka;
             Scanner scan = new Scanner(new File(sciezka+"/mapa.txt"));
-            
-            /*for (int i = 0; i < gwiazdki.length; i++) {
-                for (int j = 0; j < gwiazdki[i].length; j++) {
-                    gwiazdki[i][j] = false;
-                }
-            }
-            liczbaGwiazdek = 0;*/
             potwory = new LinkedList();
             
             for(int i = 0 ; i < mapa.length ; i++){
@@ -122,27 +127,19 @@ public class Mapa {
                 for(int j = 0 ; j < mapa[i].length ; j++){
                     switch(linia.charAt(j)){
                         case '*':
-                            //mapa[i][j] = new ElementMapy(ElementMapy.elementy.SCIANA);
+
                             break;
                         case '.':
-                            //mapa[i][j] = new ElementMapy(ElementMapy.elementy.PUSTE);
-                            //gwiazdki[i][j] = true;
-                            //liczbaGwiazdek++;
                             break;
                         case 'X':
-                            //mapa[i][j] = new ElementMapy(ElementMapy.elementy.PUSTE);
-                            //gracz = new Gracz(i,j);
                             gracz.setPozycja(i, j);
                             break;
                         case '@':
-                            //mapa[i][j] = new ElementMapy(ElementMapy.elementy.PUSTE);
-                            //gwiazdki[i][j] = true;
-                            //liczbaGwiazdek++;
                             Potwor p = new Potwor(i,j);
                             potwory.add(p);
                             break;
                         default:
-                            //mapa[i][j] = new ElementMapy(ElementMapy.elementy.SCIANA);
+                            
                     }
                 }
             }
@@ -164,12 +161,16 @@ public class Mapa {
                 }
             }
         }
+        for(int i = 0 ; i < gracz.getZycia() ; i++){
+            graphics.drawImage(serce, i*KAFELKA_SZEROKOSC, 0,null);
+        }
         for(Potwor p : potwory){
             p.rysuj(graphics);
         }
         gracz.rysuj(graphics);
+        graphics.drawString("Liczba gwiazdek do zebrania "+String.valueOf(liczbaGwiazdek), 500+10+KAFELKA_SZEROKOSC*gracz.getZycia(), 15);
+        graphics.drawString("Liczba punktow "+String.valueOf(gracz.getPunkty()), 10+KAFELKA_SZEROKOSC*gracz.getZycia(), 15);
         
-        graphics.drawString(String.valueOf(liczbaGwiazdek), 10, 10);
     }
     
     public boolean aktualizuj(long czas){
@@ -181,32 +182,13 @@ public class Mapa {
         
         
         if(liczbaGwiazdek == 0){
-            return wczytajNastepnaMape();
+            return wczytajNastepnaMape(false);
         }
         
+        
+        // kolizja //
         for(Potwor potwor : potwory){
-            //System.out.println(gracz.getWspolrzednaX()+" "+gracz.getWspolrzednaY());
-            /*if(potwor.getWspolrzednaX() > gracz.getWspolrzednaX()+KAFELKA_WYSOKOSC ||
-                    potwor.getWspolrzednaX() + KAFELKA_WYSOKOSC < gracz.getWspolrzednaX() ||
-                    potwor.getWspolrzednaY() > gracz.getWspolrzednaY() + KAFELKA_SZEROKOSC ||
-                    potwor.getWspolrzednaY() + KAFELKA_SZEROKOSC < gracz.getWspolrzednaY()){
-                
-            }else {
-                ElementMapy.wczytajObrazy("mapy/mapa2");
-                wczytajZPliku("mapy/mapa2");
-                System.out.println("blad");
-            }*/
-            /*if(potwor.getWspolrzednaX() < (gracz.getWspolrzednaX()+KAFELKA_WYSOKOSC)){
-                if(gracz.getWspolrzednaX() < (potwor.getWspolrzednaX()+KAFELKA_WYSOKOSC)){
-                    if(potwor.getWspolrzednaY() < (gracz.getWspolrzednaY() + KAFELKA_SZEROKOSC)) {
-                        if (gracz.getWspolrzednaY() < (potwor.getWspolrzednaY() + KAFELKA_SZEROKOSC)) {
-                            ElementMapy.wczytajObrazy("mapy/mapa2");
-                            wczytajZPliku("mapy/mapa2");
-                            System.out.println("blad");
-                        }
-                    }
-                }
-            }*/
+   
             if(Math.abs(potwor.getWspolrzednaX()+KAFELKA_WYSOKOSC/2 - gracz.getWspolrzednaX()-KAFELKA_WYSOKOSC/2) < KAFELKA_WYSOKOSC/2 ){
                 if(Math.abs(potwor.getWspolrzednaY()+KAFELKA_SZEROKOSC/2-gracz.getWspolrzednaY() - KAFELKA_SZEROKOSC/2) < KAFELKA_SZEROKOSC/2){
                     gracz.ustawZycia(gracz.getZycia()-1);
@@ -214,9 +196,7 @@ public class Mapa {
                         //zakonczenie gry
                         return false;
                     }else{
-                        //ElementMapy.wczytajObrazy(aktualnaMapa);
-                        //wczytajZPliku(aktualnaMapa);
-                        //gracz.setPunkty(0);
+                       
                         wczytajZPlikuPozycjeStartowe("mapy/mapa"+aktualnaMapa);
                     }
                 }

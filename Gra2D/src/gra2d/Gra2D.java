@@ -17,11 +17,21 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -44,6 +54,8 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
     private BufferedImage statystyki;
     private BufferedImage autorzy;
     private BufferedImage wyjscie;
+    
+    
     
     
     private JButton przyciskNowaGra;
@@ -74,6 +86,22 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
     private JTextField nazwaGracza;
     private JTextField liczbaPunktow;
     
+    private JLabel nazwaGracza1;
+    private JLabel punktyGracza1;
+    private JLabel nazwaGracza2;
+    private JLabel punktyGracza2;
+    private JLabel nazwaGracza3;
+    private JLabel punktyGracza3;
+    private JLabel nazwaGracza4;
+    private JLabel punktyGracza4;
+    private JLabel nazwaGracza5;
+    private JLabel punktyGracza5;
+    private JLabel nazwaGracza6;
+    private JLabel punktyGracza6;
+    private JLabel nazwaGracza7;
+    private JLabel punktyGracza7;
+    
+    
     private stanyGry stan;
     
     private Mapa mapa;
@@ -86,7 +114,7 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
         glowna = zaladujObraz("obrazy/tlo2.png");
         wczytaj = zaladujObraz("obrazy/tlo2.png");
         nowaGra = zaladujObraz("obrazy/tlo2.png");
-        statystyki = zaladujObraz("obrazy/tlo2.png");
+        statystyki = zaladujObraz("obrazy/statystyka.png");
         autorzy = zaladujObraz("obrazy/autor.png");
         wyjscie = zaladujObraz("obrazy/gra_wyjscie.png");
        
@@ -114,7 +142,7 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
         przyciskZapis3 = stworzPrzycisk("obrazy/zapis3.png", "Wyjscie", 0.9f);
         przyciskZapis3.setFocusable(true);
         
-        przyciskWyslijNaSerwer = stworzPrzycisk("obrazy/autorzy.png","Wyslij  na  serwer" , 0.9f);
+        przyciskWyslijNaSerwer = stworzPrzycisk("obrazy/wyslij.png","Wyslij  na  serwer" , 0.9f);
         przyciskWyslijNaSerwer.setFocusable(true);
         
         nowaGraSpace = new JPanel();
@@ -162,53 +190,149 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
         
         nowaGraSpace.setVisible(true);
         nowaGraSpace.setSize(przyciskNowaGra.getPreferredSize());
-        nowaGraSpace.setLocation(320, 50+65);
+        nowaGraSpace.setLocation(340, 100+65);
+        
         wczytajSpace.setVisible(true);
         wczytajSpace.setSize(przyciskWczytaj.getPreferredSize());
-        wczytajSpace.setLocation(320, 50+65+50+30);
+        wczytajSpace.setLocation(320, 50+50+50+65+50+30);
+        
         statystykiSpace.setVisible(true);
-        statystykiSpace.setSize(przyciskWczytaj.getPreferredSize());
-        statystykiSpace.setLocation(320, 50+65+50+30+50+30);
+        statystykiSpace.setSize(przyciskStatystyki.getPreferredSize());
+        statystykiSpace.setLocation(340, 50+50+65+50+30);
         autorzySpace.setVisible(true);
         autorzySpace.setSize(przyciskAutorzy.getPreferredSize());
-        autorzySpace.setLocation(320, 50+65+50+30+50+30+50+30);
+        autorzySpace.setLocation(340, 50+65+50+30+50+30+50);
         wyjscieSpace.setVisible(true);
         wyjscieSpace.setSize(przyciskWyjscie.getPreferredSize());
-        wyjscieSpace.setLocation(320, 35+75+35+75+35+75+35+75+30);
+        wyjscieSpace.setLocation(340, 35+75+35+75+35+75+35+75);
+        
+        
+        
         wrocSpace.setVisible(true);
         wrocSpace.setSize(przyciskWroc.getPreferredSize());
         wrocSpace.setLocation(340, 35+75+35+75+35+75+35+75+10);
-        zapis1Space.setVisible(true);
+        
+        zapis1Space.setVisible(true); 
         zapis1Space.setSize(przyciskZapis1.getPreferredSize());
         zapis1Space.setLocation(310, 35+75+10);
-        
         zapis2Space.setVisible(true);
         zapis2Space.setSize(przyciskZapis2.getPreferredSize());
         zapis2Space.setLocation(310, 35+75+20+75);
-        
         zapis3Space.setVisible(true);
         zapis3Space.setSize(przyciskZapis3.getPreferredSize());
         zapis3Space.setLocation(310, 25+75+20+75+20+75);
         
+        
+        
         wyslijNaSerwerspace.setVisible(true);
         wyslijNaSerwerspace.setSize(przyciskWyslijNaSerwer.getPreferredSize());
-        wyslijNaSerwerspace.setLocation(320, 50+65+50+30+50+30+50+30);
+        wyslijNaSerwerspace.setLocation(165, 50+65+50+30+50+30+50+15);
         
         
         nazwaGracza = new JTextField();
-        nazwaGracza.setBounds(310, 250, 200, 70);
+        nazwaGracza.setBounds(150, 250, 200, 70);
         nazwaGracza.setFont(new Font("Serif",Font.PLAIN,28));
         nazwaGracza.setHorizontalAlignment(JTextField.CENTER);
-        //nazwaGracza.setEditable(false);
         nazwaGracza.setVisible(false);
         
         liczbaPunktow = new JTextField();
-        liczbaPunktow.setBounds(310, 100, 200, 70);
+        liczbaPunktow.setBounds(150, 150, 200, 70);
         liczbaPunktow.setFont(new Font("Serif",Font.PLAIN,28));
         liczbaPunktow.setHorizontalAlignment(JTextField.CENTER);
         liczbaPunktow.setEditable(false);
         liczbaPunktow.setVisible(false);
 
+        nazwaGracza1 = new JLabel("Statystyki");
+        nazwaGracza1.setBounds(150, 100, 200, 50);
+        nazwaGracza1.setForeground(Color.yellow);
+        nazwaGracza1.setFont(new Font("Serif",Font.PLAIN,28));
+        nazwaGracza1.setVisible(false);
+        nazwaGracza2 = new JLabel("Statystyki");
+        nazwaGracza2.setBounds(150, 150, 200, 50);
+        nazwaGracza2.setForeground(Color.yellow);
+        nazwaGracza2.setFont(new Font("Serif",Font.PLAIN,28));
+        nazwaGracza2.setVisible(false);
+        nazwaGracza3 = new JLabel("Statystyki");
+        nazwaGracza3.setBounds(150, 200, 200, 50);
+        nazwaGracza3.setForeground(Color.yellow);
+        nazwaGracza3.setFont(new Font("Serif",Font.PLAIN,28));
+        nazwaGracza3.setVisible(false);
+        nazwaGracza4 = new JLabel("Statystyki");
+        nazwaGracza4.setBounds(150, 250, 200, 50);
+        nazwaGracza4.setForeground(Color.yellow);
+        nazwaGracza4.setFont(new Font("Serif",Font.PLAIN,28));
+        nazwaGracza4.setVisible(false);
+        nazwaGracza5 = new JLabel("Ala ma kota");
+        nazwaGracza5.setBounds(150, 300, 200, 50);
+        nazwaGracza5.setForeground(Color.yellow);
+        nazwaGracza5.setFont(new Font("Serif",Font.PLAIN,28));
+        nazwaGracza5.setVisible(false);
+        nazwaGracza6 = new JLabel("Statystyki");
+        nazwaGracza6.setBounds(150, 350, 200, 50);
+        nazwaGracza6.setForeground(Color.yellow);
+        nazwaGracza6.setFont(new Font("Serif",Font.PLAIN,28));
+        nazwaGracza6.setVisible(false);
+        nazwaGracza7 = new JLabel("Statystyki");
+        nazwaGracza7.setBounds(150, 400, 200, 50);
+        nazwaGracza7.setForeground(Color.yellow);
+        nazwaGracza7.setFont(new Font("Serif",Font.PLAIN,28));
+        nazwaGracza7.setVisible(false);
+        
+        punktyGracza1 = new JLabel("Statystyki");
+        punktyGracza1.setBounds(300, 100, 200, 50);
+        punktyGracza1.setForeground(Color.yellow);
+        punktyGracza1.setFont(new Font("Serif",Font.PLAIN,28));
+        punktyGracza1.setVisible(false);
+        punktyGracza2 = new JLabel("Statystyki");
+        punktyGracza2.setBounds(300, 150, 200, 50);
+        punktyGracza2.setForeground(Color.yellow);
+        punktyGracza2.setFont(new Font("Serif",Font.PLAIN,28));
+        punktyGracza2.setVisible(false);
+        punktyGracza3 = new JLabel("Statystyki");
+        punktyGracza3.setBounds(300, 200, 200, 50);
+        punktyGracza3.setForeground(Color.yellow);
+        punktyGracza3.setFont(new Font("Serif",Font.PLAIN,28));
+        punktyGracza3.setVisible(false);
+        punktyGracza4 = new JLabel("Statystyki");
+        punktyGracza4.setBounds(300, 250, 200, 50);
+        punktyGracza4.setForeground(Color.yellow);
+        punktyGracza4.setFont(new Font("Serif",Font.PLAIN,28));
+        punktyGracza4.setVisible(false);
+        punktyGracza5 = new JLabel("Statystyki");
+        punktyGracza5.setBounds(300, 300, 200, 50);
+        punktyGracza5.setForeground(Color.yellow);
+        punktyGracza5.setFont(new Font("Serif",Font.PLAIN,28));
+        punktyGracza5.setVisible(false);
+        punktyGracza6 = new JLabel("Statystyki");
+        punktyGracza6.setBounds(300, 350, 200, 50);
+        punktyGracza6.setForeground(Color.yellow);
+        punktyGracza6.setFont(new Font("Serif",Font.PLAIN,28));
+        punktyGracza6.setVisible(false);
+        punktyGracza7 = new JLabel("Statystyki");
+        punktyGracza7.setBounds(300, 400, 200, 50);
+        punktyGracza7.setForeground(Color.yellow);
+        punktyGracza7.setFont(new Font("Serif",Font.PLAIN,28));
+        punktyGracza7.setVisible(false);
+                
+        
+        
+        ramkaGlowna.getLayeredPane().add(nazwaGracza1,JLayeredPane.MODAL_LAYER);
+        ramkaGlowna.getLayeredPane().add(nazwaGracza2,JLayeredPane.MODAL_LAYER);
+        ramkaGlowna.getLayeredPane().add(nazwaGracza3,JLayeredPane.MODAL_LAYER);
+        ramkaGlowna.getLayeredPane().add(nazwaGracza4,JLayeredPane.MODAL_LAYER);
+        ramkaGlowna.getLayeredPane().add(nazwaGracza5,JLayeredPane.MODAL_LAYER);
+        ramkaGlowna.getLayeredPane().add(nazwaGracza6,JLayeredPane.MODAL_LAYER);
+        ramkaGlowna.getLayeredPane().add(nazwaGracza7,JLayeredPane.MODAL_LAYER);
+        
+        ramkaGlowna.getLayeredPane().add(punktyGracza1,JLayeredPane.MODAL_LAYER);
+        ramkaGlowna.getLayeredPane().add(punktyGracza2,JLayeredPane.MODAL_LAYER);
+        ramkaGlowna.getLayeredPane().add(punktyGracza3,JLayeredPane.MODAL_LAYER);
+        ramkaGlowna.getLayeredPane().add(punktyGracza4,JLayeredPane.MODAL_LAYER);
+        ramkaGlowna.getLayeredPane().add(punktyGracza5,JLayeredPane.MODAL_LAYER);
+        ramkaGlowna.getLayeredPane().add(punktyGracza6,JLayeredPane.MODAL_LAYER);
+        ramkaGlowna.getLayeredPane().add(punktyGracza7,JLayeredPane.MODAL_LAYER);
+        
+        
         
         
         ramkaGlowna.getLayeredPane().add(nowaGraSpace,JLayeredPane.MODAL_LAYER);
@@ -225,7 +349,7 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
         ramkaGlowna.getLayeredPane().add(liczbaPunktow,JLayeredPane.MODAL_LAYER);
         
         przyciskNowaGra.setVisible(true);
-        przyciskWczytaj.setVisible(true);
+        przyciskWczytaj.setVisible(false);
         przyciskStatystyki.setVisible(true);
         przyciskAutorzy.setVisible(true);
         przyciskWyjscie.setVisible(true);
@@ -249,9 +373,10 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
                 if(mapa.aktualizuj(czas) == false){
                     stan = stanyGry.KONIEC_GRY;
                     liczbaPunktow.setVisible(true);
-                    liczbaPunktow.setText(String.valueOf(mapa.getPunkty()));
+                    liczbaPunktow.setText("Punkty "+String.valueOf(mapa.getPunkty()));
                     nazwaGracza.setVisible(true);
                     przyciskWyslijNaSerwer.setVisible(true);
+                    przyciskWroc.setVisible(true);
                 }
                 break;
             case WCZYTAJ:
@@ -369,16 +494,33 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
     
     private void pokazPrzyciskiMenu(boolean b){
         przyciskNowaGra.setVisible(b);
-        przyciskWczytaj.setVisible(b);
+        przyciskWczytaj.setVisible(false);
         przyciskStatystyki.setVisible(b);
         przyciskAutorzy.setVisible(b);
         przyciskWyjscie.setVisible(b);
     }
-
+    
+    private void pokazStatystyki(boolean b)
+    {
+        nazwaGracza1.setVisible(b);
+        nazwaGracza2.setVisible(b);
+        nazwaGracza3.setVisible(b);
+        nazwaGracza4.setVisible(b);
+        nazwaGracza5.setVisible(b);
+        nazwaGracza6.setVisible(b);
+        nazwaGracza7.setVisible(b);
+        punktyGracza1.setVisible(b);
+        punktyGracza2.setVisible(b);
+        punktyGracza3.setVisible(b);
+        punktyGracza4.setVisible(b);
+        punktyGracza5.setVisible(b);
+        punktyGracza6.setVisible(b);
+        punktyGracza7.setVisible(b);
+    }
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == przyciskNowaGra){
-            mapa = new Mapa(3);
+            mapa = new Mapa(1);
             pokazPrzyciskiMenu(false);
             stan = stanyGry.NOWAGRA;
             przyciskWroc.setVisible(false);
@@ -392,10 +534,80 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
             przyciskWroc.setVisible(true);
             ramkaGlowna.requestFocus();
         }else if(e.getSource() == przyciskStatystyki){
+            String stat = "";
+            try {
+                Socket socket = new Socket("localhost", 1166);
+
+                ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
+                ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+
+                //output.writeObject("wyslij na serwer");
+
+                output.writeObject("pobierz statystyki");
+                stat = (String) input.readObject();
+               
+                //statystyki = (String) input.readObject();
+                   
+                output.writeObject("koniec");
+                socket.close();
+                input.close();
+                output.close();
+            } catch (Exception ex) {
+                System.out.println("Blad polaczenia z serwerem");
+                ex.printStackTrace();
+            }
+            
+            System.out.println(stat);
+            
+            Scanner scan = new Scanner(stat);
+            
+            List<Statystyka> lista = new LinkedList();
+            while(scan.hasNext()){
+                lista.add(new Statystyka(scan.nextLine(),Integer.parseInt(scan.nextLine())));
+            }
+            
+            Collections.sort(lista);
+            
+            nazwaGracza1.setText("Brak");
+            punktyGracza1.setText("0");
+            nazwaGracza2.setText("Brak");
+            punktyGracza2.setText("0");
+            nazwaGracza3.setText("Brak");
+            punktyGracza3.setText("0");
+            nazwaGracza4.setText("Brak");
+            punktyGracza4.setText("0");
+            nazwaGracza5.setText("Brak");
+            punktyGracza5.setText("0");
+            nazwaGracza6.setText("Brak");
+            punktyGracza6.setText("0");
+            nazwaGracza7.setText("Brak");
+            punktyGracza7.setText("0");
+
+            try{
+                nazwaGracza1.setText(lista.get(0).getNazwa());
+                punktyGracza1.setText(String.valueOf(lista.get(0).getPunkty()));
+                nazwaGracza2.setText(lista.get(1).getNazwa());
+                punktyGracza2.setText(String.valueOf(lista.get(1).getPunkty()));
+                nazwaGracza3.setText(lista.get(2).getNazwa());
+                punktyGracza3.setText(String.valueOf(lista.get(2).getPunkty()));
+                nazwaGracza4.setText(lista.get(3).getNazwa());
+                punktyGracza4.setText(String.valueOf(lista.get(3).getPunkty()));
+                nazwaGracza5.setText(lista.get(4).getNazwa());
+                punktyGracza5.setText(String.valueOf(lista.get(4).getPunkty()));
+                nazwaGracza6.setText(lista.get(5).getNazwa());
+                punktyGracza6.setText(String.valueOf(lista.get(5).getPunkty()));
+                nazwaGracza7.setText(lista.get(6).getNazwa());
+                punktyGracza7.setText(String.valueOf(lista.get(6).getPunkty()));
+            }catch(Exception ex){
+                
+            }
+            
             pokazPrzyciskiMenu(false);
+            pokazStatystyki(true);
             stan = stanyGry.STATYSTYKI;
             przyciskWroc.setVisible(true);
             ramkaGlowna.requestFocus();
+            
         }else if(e.getSource() == przyciskAutorzy){
             pokazPrzyciskiMenu(false);
             stan = stanyGry.AUTORZY;
@@ -404,16 +616,62 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
         }else if(e.getSource() == przyciskWyjscie){
             pokazPrzyciskiMenu(false);
             stan = stanyGry.WYJSCIE;
+            pokazPrzyciskiMenu(false);
+            pokazStatystyki(false);
+            przyciskWroc.setVisible(false);
             stop();
             ramkaGlowna.requestFocus();
         }else if(e.getSource() == przyciskWroc){
             pokazPrzyciskiMenu(true);
+            pokazStatystyki(false);
             stan = stanyGry.GLOWNE;
             przyciskWroc.setVisible(false);
             przyciskZapis1.setVisible(false);
             przyciskZapis2.setVisible(false);
             przyciskZapis3.setVisible(false);
+            nazwaGracza.setVisible(false);
+            liczbaPunktow.setVisible(false);
+            przyciskWyslijNaSerwer.setVisible(false);
             ramkaGlowna.requestFocus();
+        } else if (e.getSource() == przyciskWyslijNaSerwer) {
+            String nazwa;
+            if (nazwaGracza.getText().equals("")) {
+                nazwa = "nieznany";
+            } else {
+                nazwa = nazwaGracza.getText();
+            }
+            int punkty = Integer.parseInt(liczbaPunktow.getText().split(" ")[1]);
+
+            try {
+                Socket socket = new Socket("localhost", 1166);
+
+                ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
+                ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+
+                output.writeObject("wyslij na serwer");
+                output.writeObject(nazwa);
+                output.writeObject(punkty);
+
+                //output.writeObject("pobierz statystyki");
+                
+               
+                //statystyki = (String) input.readObject();
+                   
+                output.writeObject("koniec");
+                socket.close();
+                input.close();
+                output.close();
+            } catch (Exception ex) {
+                System.out.println("Blad polaczenia z serwerem");
+                ex.printStackTrace();
+            }
+            
+            nazwaGracza.setVisible(false);
+            liczbaPunktow.setVisible(false);
+            przyciskWyslijNaSerwer.setVisible(false);
+            przyciskWroc.setVisible(false);
+            pokazPrzyciskiMenu(true);
+            stan = stanyGry.GLOWNE;
         }
     }
     
@@ -424,14 +682,25 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if(e.getKeyCode() == KeyEvent.VK_LEFT){
-            mapa.graczSetKierunek(kierunekPoruszania.LEWO);
-        }else if(e.getKeyCode() == KeyEvent.VK_RIGHT){
-            mapa.graczSetKierunek(kierunekPoruszania.PRAWO);
-        }else if(e.getKeyCode() == KeyEvent.VK_UP){
-            mapa.graczSetKierunek(kierunekPoruszania.GORA);
-        }else if(e.getKeyCode() == KeyEvent.VK_DOWN){
-            mapa.graczSetKierunek(kierunekPoruszania.DOL);
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_LEFT:
+                mapa.graczSetKierunek(kierunekPoruszania.LEWO);
+                break;
+            case KeyEvent.VK_RIGHT:
+                mapa.graczSetKierunek(kierunekPoruszania.PRAWO);
+                break;
+            case KeyEvent.VK_UP:
+                mapa.graczSetKierunek(kierunekPoruszania.GORA);
+                break;
+            case KeyEvent.VK_DOWN:
+                mapa.graczSetKierunek(kierunekPoruszania.DOL);
+                break;
+            case KeyEvent.VK_ESCAPE:
+                stan = stanyGry.GLOWNE;
+                pokazPrzyciskiMenu(true);
+                pokazStatystyki(false);
+            default:
+                break;
         }
         mapa.graczSetCzyMaChodzic(true);
     }

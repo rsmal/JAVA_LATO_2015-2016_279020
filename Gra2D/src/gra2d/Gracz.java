@@ -1,6 +1,7 @@
 package gra2d;
 
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -8,10 +9,13 @@ import javax.imageio.ImageIO;
 
 
 public class Gracz {
-    private static final double PREDKOSC = 0.70;
+    private static final double PREDKOSC = 0.80;
     private int x;
     private int y;
-    private static BufferedImage obraz;
+    private static BufferedImage obrazPrawo;
+    private static BufferedImage obrazLewo;
+    private static BufferedImage obrazGora;
+    private static BufferedImage obrazDol;
     private long czas;
     private double xRuch;
     private double yRuch;
@@ -37,14 +41,36 @@ public class Gracz {
     
     public static void wczytajObraz(){
         try {
-            obraz = ImageIO.read(new File("obrazy/grafiki/pacman.png"));
+            obrazPrawo = ImageIO.read(new File("obrazy/grafiki/pacman.png"));
+            obrazLewo = ImageIO.read(new File("obrazy/grafiki/pacman_lewo.png"));
+            obrazGora = ImageIO.read(new File("obrazy/grafiki/pacman_gora.png"));
+            obrazDol = ImageIO.read(new File("obrazy/grafiki/pacman_dol.png"));
+            
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
     
     public void rysuj(Graphics2D graphics){
-        graphics.drawImage(obraz, (int) (y * Mapa.KAFELKA_SZEROKOSC + yRuch), (int) (x * Mapa.KAFELKA_WYSOKOSC + xRuch), null);
+        if(null != kierunek)switch (kierunek) {
+            case PRAWO:
+                graphics.drawImage(obrazPrawo, (int) (y * Mapa.KAFELKA_SZEROKOSC + yRuch), (int) (x * Mapa.KAFELKA_WYSOKOSC + xRuch), null);
+                break;
+            case LEWO:
+                graphics.drawImage(obrazLewo, (int) (y * Mapa.KAFELKA_SZEROKOSC + yRuch), (int) (x * Mapa.KAFELKA_WYSOKOSC + xRuch), null);
+                break;
+            case GORA:
+                graphics.drawImage(obrazGora, (int) (y * Mapa.KAFELKA_SZEROKOSC + yRuch), (int) (x * Mapa.KAFELKA_WYSOKOSC + xRuch), null);
+                break;
+            case DOL:
+                graphics.drawImage(obrazDol, (int) (y * Mapa.KAFELKA_SZEROKOSC + yRuch), (int) (x * Mapa.KAFELKA_WYSOKOSC + xRuch), null);
+                break;
+            default:
+                graphics.drawImage(obrazPrawo, (int) (y * Mapa.KAFELKA_SZEROKOSC + yRuch), (int) (x * Mapa.KAFELKA_WYSOKOSC + xRuch), null);
+                break;
+        }
+        
+
     }
     
     public void aktualizuj(long czas,ElementMapy[][] mapa,boolean gwiazdki[][],Mapa glownaMapa){
@@ -122,6 +148,7 @@ public class Gracz {
                         default:
                     }
                     
+                    /// do logiki //
                     if (yRuch >= 24) {
                         y++;
                         yRuch = 0;
@@ -130,7 +157,7 @@ public class Gracz {
                             punkty++;
                             glownaMapa.zmniejszGwiazdki();
                         }
-                       // czyMaChodzic = false;
+                       
                     } else if (yRuch <= -24) {
                         y--;
                         yRuch = 0;
@@ -139,7 +166,7 @@ public class Gracz {
                             punkty++;
                             glownaMapa.zmniejszGwiazdki();
                         }
-                        //czyMaChodzic = false;
+                        
                     } else if (xRuch >= 24) {
                         x++;
                         xRuch = 0;
@@ -148,7 +175,7 @@ public class Gracz {
                             punkty++;
                             glownaMapa.zmniejszGwiazdki();
                         }
-                        //czyMaChodzic = false;
+                        
                     } else if (xRuch <= -24) {
                         x--;
                         xRuch = 0;
@@ -157,7 +184,7 @@ public class Gracz {
                             punkty++;
                             glownaMapa.zmniejszGwiazdki();
                         }
-                       // czyMaChodzic = false;
+                       
                     }
                 }
                 
@@ -172,37 +199,6 @@ public class Gracz {
     
     public void setKierunek(kierunekPoruszania kierunek){
         this.kierunekZamawiany = kierunek;
-//        if(kierunek == kierunekPoruszania.NIEZNANY){
-//            this.kierunek = kierunekPoruszania.GORA;
-//        }
-//        
-//        if(kierunek == kierunekPoruszania.LEWO){
-//            if(xRuch != 0){
-//                return;
-//            }else{
-//                this.kierunek = kierunek;
-//            }
-//        }else if(kierunek == kierunekPoruszania.PRAWO){
-//            if(xRuch != 0){
-//                return;
-//            }else{
-//                this.kierunek = kierunek;
-//            }
-//        }else if(kierunek == kierunekPoruszania.GORA){
-//            if(yRuch != 0){
-//                return;
-//            }else{
-//                this.kierunek = kierunek;
-//            }
-//        }else if(kierunek == kierunekPoruszania.DOL){
-//            if(yRuch != 0){
-//                return;
-//            }else{
-//                this.kierunek = kierunek;
-//            }
-//        }
-        
-        //this.kierunek = kierunek;
     }
     public int getWspolrzednaX(){
         return (int) (x * Mapa.KAFELKA_WYSOKOSC + xRuch);
