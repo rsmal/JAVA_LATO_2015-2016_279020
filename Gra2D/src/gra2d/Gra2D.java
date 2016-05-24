@@ -83,7 +83,7 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
     
     private JButton przyciskWyslijNaSerwer;
     private JPanel wyslijNaSerwerspace;
-    private JTextField nazwaGracza;
+    private Text nazwaGracza;
     private JTextField liczbaPunktow;
     
     private JLabel nazwaGracza1;
@@ -229,7 +229,7 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
         wyslijNaSerwerspace.setLocation(165, 50+65+50+30+50+30+50+15);
         
         
-        nazwaGracza = new JTextField();
+        nazwaGracza = new Text();
         nazwaGracza.setBounds(150, 250, 200, 70);
         nazwaGracza.setFont(new Font("Serif",Font.PLAIN,28));
         nazwaGracza.setHorizontalAlignment(JTextField.CENTER);
@@ -376,6 +376,7 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
                     liczbaPunktow.setText("Punkty "+String.valueOf(mapa.getPunkty()));
                     nazwaGracza.setVisible(true);
                     przyciskWyslijNaSerwer.setVisible(true);
+                    wrocSpace.setLocation(230, 35+75+35+75+35+75+35+75+10);
                     przyciskWroc.setVisible(true);
                 }
                 break;
@@ -534,6 +535,7 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
             przyciskWroc.setVisible(true);
             ramkaGlowna.requestFocus();
         }else if(e.getSource() == przyciskStatystyki){
+            wrocSpace.setLocation(230, 35+75+35+75+35+75+35+75+10);
             String stat = "";
             try {
                 Socket socket = new Socket("localhost", 1166);
@@ -542,6 +544,7 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
                 ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
 
                 //output.writeObject("wyslij na serwer");
+                output.writeObject("ALA MA CHOMIKA");
 
                 output.writeObject("pobierz statystyki");
                 stat = (String) input.readObject();
@@ -599,7 +602,7 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
                 nazwaGracza7.setText(lista.get(6).getNazwa());
                 punktyGracza7.setText(String.valueOf(lista.get(6).getPunkty()));
             }catch(Exception ex){
-                
+                ex.printStackTrace();
             }
             
             pokazPrzyciskiMenu(false);
@@ -633,6 +636,7 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
             liczbaPunktow.setVisible(false);
             przyciskWyslijNaSerwer.setVisible(false);
             ramkaGlowna.requestFocus();
+            wrocSpace.setLocation(340, 35+75+35+75+35+75+35+75+10);
         } else if (e.getSource() == przyciskWyslijNaSerwer) {
             String nazwa;
             if (nazwaGracza.getText().equals("")) {
@@ -647,11 +651,15 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
 
                 ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
                 ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+                
+                output.writeObject("ALA MA CHOMIKA");
 
                 output.writeObject("wyslij na serwer");
-                output.writeObject(nazwa);
-                output.writeObject(punkty);
-
+                output.writeObject("1234567890");
+                if (((String) input.readObject()).equals("OK")) {
+                    output.writeObject(nazwa);
+                    output.writeObject(punkty);
+                }
                 //output.writeObject("pobierz statystyki");
                 
                
@@ -708,5 +716,98 @@ public class Gra2D extends Gra2DJadro implements ActionListener,KeyListener{
     @Override
     public void keyReleased(KeyEvent e) {
         
+    }
+    
+    private class Text extends JTextField{
+            public Text(){
+                super();
+                super.setFont(new Font("serif",Font.PLAIN,24));
+                enableEvents(KeyEvent.KEY_EVENT_MASK);
+            }
+            @Override
+            public void setText(String s){
+                String text = super.getText();
+                int pomoc = super.getCaretPosition();
+                String textpomoc = text.substring(0, pomoc)+s+text.substring(pomoc);
+                // Upewnij sie ze nie ma  zakleszczenia
+                synchronized (getTreeLock()) {
+                    super.setText(textpomoc);
+                }
+                super.setCaretPosition(pomoc+s.length());
+            }
+            @Override
+            public String getText(){
+            // Upewnij sie ze nie ma  zakleszczenia
+                String text;
+                synchronized (getTreeLock()) {
+                    text = super.getText();
+                }
+                return text;
+            }
+            public void clear(){
+                synchronized (getTreeLock()) {
+                                super.setText("");
+                            }
+            }
+            //  przechwytywania zdarzen klawiatury
+            @Override
+            protected void processKeyEvent(KeyEvent e) {
+                //synchronized (getTreeLock()){
+                 //   super.processKeyEvent(e);
+                //}
+                if (e.getID() == KeyEvent.KEY_PRESSED) {
+                    //  Backspace, skojarzenie jest kasowane.
+                    if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE){
+                        String pomoc = getText();
+                        if(pomoc.length() > 0){
+                            // Upewnij sie ze nie ma zakleszczenia .
+                            synchronized (getTreeLock()) {
+                                int pomoc1 = super.getCaretPosition();
+                                if(pomoc1 > 1){
+                                    super.setText(pomoc.substring(0, pomoc1-1)+pomoc.substring(pomoc1));
+                                    super.setCaretPosition(pomoc1-1);
+                                }else if(pomoc1==1){
+                                    super.setText(pomoc.substring(pomoc1));
+                                    super.setCaretPosition(pomoc1-1);
+                                }
+                            }
+                        } 
+                    }else if((e.getKeyCode() >= KeyEvent.VK_0 && e.getKeyCode() <= KeyEvent.VK_9)
+                            || (e.getKeyCode() >= KeyEvent.VK_A && e.getKeyCode() <= KeyEvent.VK_Z)
+                            || e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_COMMA
+                            || e.getKeyCode() == KeyEvent.VK_EQUALS || e.getKeyCode() == KeyEvent.VK_MINUS
+                            || e.getKeyCode() == KeyEvent.VK_CLOSE_BRACKET || e.getKeyCode() == KeyEvent.VK_OPEN_BRACKET
+                            || e.getKeyCode() == KeyEvent.VK_BACK_SLASH || e.getKeyCode() == KeyEvent.VK_BACK_QUOTE
+                            || e.getKeyCode() == KeyEvent.VK_QUOTE || e.getKeyCode() == KeyEvent.VK_SEMICOLON
+                            || e.getKeyCode() == KeyEvent.VK_SLASH || e.getKeyCode() == KeyEvent.VK_PERIOD){
+                        if(getText().length() < 10){
+                            setText(String.valueOf(e.getKeyChar()));
+                        }
+                    }else if(e.getKeyCode() == KeyEvent.VK_LEFT){
+                        int pomoc = this.getCaretPosition();
+                        if(pomoc > 0){
+                            this.setCaretPosition(pomoc-1);
+                        }
+                    }else if(e.getKeyCode() == KeyEvent.VK_RIGHT){
+                        int pomoc = this.getCaretPosition();
+                        if(pomoc < this.getText().length()){
+                            this.setCaretPosition(pomoc+1);
+                        }
+                    }else if(e.getKeyCode() == KeyEvent.VK_DELETE){
+                        String pomoc = getText();
+                        if(pomoc.length() > 0){
+                            // upewnij sie ze nie ma zakleszczenia
+                            synchronized (getTreeLock()) {
+                                int pomoc1 = super.getCaretPosition();
+                                if(pomoc1 < pomoc.length()){
+                                    super.setText(pomoc.substring(0, pomoc1)+pomoc.substring(pomoc1+1));
+                                    super.setCaretPosition(pomoc1);
+                                }
+                            }
+                        } 
+                    }
+                }
+                e.consume();
+            }
     }
 }

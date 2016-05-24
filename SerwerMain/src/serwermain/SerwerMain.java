@@ -16,6 +16,11 @@ public class SerwerMain {
                     break;
                 }else if(input.startsWith("cleanTable")){
                     s.czyscTabele();
+                }else if(input.startsWith("logg")){
+                    System.out.println("");
+                    System.out.println("LOGG:");
+                    s.drukujLoggi();
+                    System.out.println("");
                 }
             }
         }catch(Exception ex){

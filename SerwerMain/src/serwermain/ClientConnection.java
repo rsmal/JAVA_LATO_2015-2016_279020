@@ -32,6 +32,13 @@ public class ClientConnection extends Thread{
         boolean uruchomiony = true;
         
         try{
+            String password = "ALA MA CHOMIKA";
+            String test = (String) input.readObject();
+            if(!password.equals(test)){
+                System.out.println("Klient id="+id+" AUTHORIZATION FAILED " +  "Data: "+new Date().toString());
+                throw new Exception("AUTHORIZATION FAILED");
+            }
+            System.out.println("Klient id="+id+" AUTHORIZATION SUCCESS " +  "Data: "+new Date().toString());
             while(uruchomiony){
                 String message = (String) input.readObject();
                 
@@ -40,10 +47,18 @@ public class ClientConnection extends Thread{
                     break;
                 }else if(message.equals("wyslij na serwer")){
                     //output.writeObject("Nazwa uzytkownika");
-                    String nazwaUzytkownika = (String) input.readObject();
-                    //output.writeObject("Liczba punktow");
-                    int punkty = (int) input.readObject();
-                    serwer.dodajStatystyke(nazwaUzytkownika, punkty);
+                    String haslo = (String) input.readObject();
+                    if (haslo.equals("1234567890")) {
+                        output.writeObject("OK");
+                        System.out.println("Klient id="+id+"  Autoryzacja OK   Data: "+new Date().toString());
+                        String nazwaUzytkownika = (String) input.readObject();
+                        //output.writeObject("Liczba punktow");
+                        int punkty = (int) input.readObject();
+                        serwer.dodajStatystyke(nazwaUzytkownika, punkty);
+                    }else{
+                        output.writeObject("Bledne haslo!");
+                        System.out.println("Klient id="+id+"  Autoryzacja ERROR   Data: "+new Date().toString());
+                    }
                 }else if(message.equals("pobierz statystyki")){
                     output.writeObject(serwer.pobierzStatystyki());
                 }

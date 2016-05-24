@@ -108,7 +108,7 @@ public class Mapa {
                     }
                 }
             }
-            
+            scan.close();
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
             return false;
@@ -143,6 +143,7 @@ public class Mapa {
                     }
                 }
             }
+            scan.close();
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
         }

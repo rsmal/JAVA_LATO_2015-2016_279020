@@ -1,4 +1,6 @@
+
 package gra2d;
+
 
 public class Statystyka implements Comparable<Statystyka>{
     String nazwa;

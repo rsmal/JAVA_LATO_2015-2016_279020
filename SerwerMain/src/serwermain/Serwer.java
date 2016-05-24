@@ -7,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -27,9 +28,9 @@ public class Serwer extends Thread{
     @Override
     public void run(){
         uruchomiony = true;
-        
+        ServerSocket serwer = null;
         try{
-            ServerSocket serwer = new ServerSocket(numerPortu);
+            serwer = new ServerSocket(numerPortu);
             System.out.println("Serwer jest uruchomiony na porcie " + numerPortu);
             
             while(uruchomiony){
@@ -54,6 +55,13 @@ public class Serwer extends Thread{
             System.out.println("Blad utworzenia gniazdka");
         }finally{
             System.out.println("Serwer wylaczony");
+            if(serwer != null){
+                try {
+                    serwer.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(Serwer.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
     }
     public void close(){
@@ -145,6 +153,53 @@ public class Serwer extends Thread{
             stat.executeUpdate(comenda);
             
             
+            try{
+                comenda = "CREATE TABLE LOGG("
+                        + "UZYTKOWNIK TEXT,"
+                        + "DATA TEXT"
+                        + ");";
+
+                stat.executeUpdate(comenda);
+            }catch(Exception ex){
+                //ex.printStackTrace();
+            }
+            
+            comenda = "INSERT INTO LOGG VALUES ("
+                    + "'"+ nazwa + "',"
+                    + "'"+ new Date() +"'"
+                    + ");";
+            
+            stat.executeUpdate(comenda);
+            
+            
+            stat.close();
+            c.close();
+            
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    public synchronized void drukujLoggi(){
+        Connection c = null;
+        Statement stat = null;
+        
+        try {
+            Class.forName("org.sqlite.JDBC");
+            
+            c = DriverManager.getConnection("jdbc:sqlite:statystyki.db");
+            
+            stat = c.createStatement();
+            
+            String comenda = "SELECT * FROM LOGG";
+            
+            ResultSet result = stat.executeQuery(comenda);
+            
+            while(result.next()){
+                System.out.println(result.getString("UZYTKOWNIK") + " !!!!! "+result.getString("DATA"));
+            }
             stat.close();
             c.close();
             
@@ -183,7 +238,23 @@ public class Serwer extends Thread{
             }catch(Exception ex){
                 //ex.printStackTrace();
             }
-            
+
+            comenda = "DROP TABLE LOGG";
+            try{
+                stat.executeUpdate(comenda);
+            }catch(Exception ex){
+                
+            }
+            try{
+                comenda = "CREATE TABLE LOGG("
+                        + "UZYTKOWNIK TEXT,"
+                        + "DATA TEXT"
+                        + ");";
+
+                stat.executeUpdate(comenda);
+            }catch(Exception ex){
+                //ex.printStackTrace();
+            }
             
             stat.close();
             c.close();
