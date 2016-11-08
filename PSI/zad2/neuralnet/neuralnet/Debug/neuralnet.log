@@ -1,0 +1,3 @@
+﻿  main.cpp
+c:\users\joseph\desktop\neuralnet\neuralnet\main.cpp(194): error C2039: 'setOutputVals': is not a member of 'Neuron'
+  c:\users\joseph\desktop\neuralnet\neuralnet\main.cpp(20): note: see declaration of 'Neuron'
